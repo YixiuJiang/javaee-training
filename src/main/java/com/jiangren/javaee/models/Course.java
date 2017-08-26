@@ -8,13 +8,10 @@ import java.util.List;
 /**
  * Created by seabookchen on 22/08/2017.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Course {
     private Long id;
     private String name;
     private String description;
-    private Instructor instructor;
-    private List<Category> categoryList;
 
     public Course() {
 
@@ -24,8 +21,6 @@ public class Course {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.instructor = instructor;
-        this.categoryList = categoryList;
     }
 
     public Long getId() {
@@ -52,19 +47,19 @@ public class Course {
         this.description = description;
     }
 
-    public Instructor getInstructor() {
-        return instructor;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Course course = (Course) o;
+
+        return id.equals(course.id);
+
     }
 
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
-    }
-
-    public List<Category> getCategoryList() {
-        return categoryList;
-    }
-
-    public void setCategoryList(List<Category> categoryList) {
-        this.categoryList = categoryList;
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
