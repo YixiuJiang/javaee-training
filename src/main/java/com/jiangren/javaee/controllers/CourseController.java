@@ -60,8 +60,8 @@ public class CourseController {
     @RequestMapping(value = "courses/{id}", method = RequestMethod.DELETE)
     public Course delete(@PathVariable Long id) {
         // return CourseMockData.deleteCourse(id);
-        Course course = courseRepository.getOne(id);
-        courseRepository.delete(id);
+        Course course = courseRepository.findOne(id);
+        courseRepository.delete(course);
 
         return course;
     }
