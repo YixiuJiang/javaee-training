@@ -1,15 +1,15 @@
 package com.jiangren.javaee;
 
+import com.jiangren.javaee.models.Category;
 import com.jiangren.javaee.models.Course;
+import com.jiangren.javaee.models.Instructor;
 import com.jiangren.javaee.repositories.CourseRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootApplication
 public class App
@@ -21,20 +21,28 @@ public class App
     @Bean
     CommandLineRunner runner(CourseRepository courseRepository) {
         return (args) -> {
-            Map<String,String> courses = new HashMap<String, String>()
-            {
-                {
-                    put("java", "This is an good java class taught by Seabook");
-                    put("ruby", "What's ruby?");
-                    put("javascript", "why javascript?");
-                }
-            };
+            Course course = new Course();
+            course.setName("Java");
+            course.setDescription("This is a good Java course");
 
-            courses.entrySet().forEach(entry -> courseRepository.save(new Course(entry.getKey(), entry.getValue())));
 
-            courseRepository.findAll().forEach(System.out::println);
+            Instructor instructor = new Instructor();
+            instructor.setFirstName("Seabook");
+            instructor.setLastName("Chen");
+            instructor.setLinkedInProfileUrl("linkedin");
+            instructor.setBio("This is the bio");
 
-            courseRepository.findByName("java").forEach(System.out::println);
+            Category category = new Category();
+            category.setName("Programming Language");
+            category.setDescription("This category is designed for programming");
+
+
+            course.setInstructor(instructor);
+            Set categories = new HashSet<Category>();
+            categories.add(category);
+            course.setCategories(categories);
+
+            courseRepository.save(course);
         };
     }
 }
