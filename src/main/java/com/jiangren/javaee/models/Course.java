@@ -1,24 +1,43 @@
 package com.jiangren.javaee.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.google.gson.Gson;
 
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by seabookchen on 22/08/2017.
  */
+@Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Course {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // IDENTITY, TABLE, AUTO
     private Long id;
+
     private String name;
+
     private String description;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "instructor_id", referencedColumnName = "id")
+    private Instructor instructor;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "course_category", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
+    private Set<Category> categories;
 
     public Course() {
 
     }
 
-    public Course(Long id, String name, String description, Instructor instructor, List<Category> categoryList) {
-        this.id = id;
+    public Course(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -47,19 +66,21 @@ public class Course {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Course course = (Course) o;
-
-        return id.equals(course.id);
-
+    public Instructor getInstructor() {
+        return instructor;
     }
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
     }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+
 }
